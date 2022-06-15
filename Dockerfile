@@ -1,6 +1,6 @@
 FROM node:14
 
-WORKDIR /usr/src/app/scheduler
+WORKDIR /usr/src/app/belt
 
 COPY package*.json ./
 
