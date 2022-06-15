@@ -3,65 +3,54 @@ import './app.css';
 import { Header } from './components/header'
 import { Page } from './components/page'
 import { DrawerPanel } from './components/drawer-panel'
-import { IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { flags } from './settings/flags';
-import { menuItems } from './settings/menu-items';
+import { CssBaseline } from '@mui/material';
+import useFlags from './settings/flags-provider';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';;
+
+const Root = styled.div`
+  display: flex;
+  width: 100vw;
+  & > *{
+    flex: 1;
+  }
+`;
 
 const Iframe = styled.iframe`
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
   z-index: -10;
   border: none;
 `;
 
-const App = (props: {children: React.ReactElement}) => {
-  // createUser = (e) => {
-  //   createUser(this.state.user)
-  //   .then(response => {
-  //     console.log(response);
-  //     this.setState({numberOfUsers: this.state.numberOfUsers + 1})
-  //   });
-  // }
-  const [drawOpen, setDrawOpen] = React.useState(false);
-  const [selectedIFrame, setSelectedIFrame] = React.useState(menuItems[0]);
-  const [iFrameLoaded, setIFrameLoaded] = React.useState(false);
+const PageWrapper = styled(Page)`
+  height: 100vh;
+`;
+
+const App = (props: { children: React.ReactElement }) => {
+  let flags = useFlags();
   let navigate = useNavigate();
+  
+  const [drawOpen, setDrawOpen] = React.useState(false);
+  const [selectedIFrame, setSelectedIFrame] = React.useState(flags.menu.items[0]);
   return (
-    <div className="App">
+    <Root className="App">
+      <CssBaseline />
       <Header />
       <DrawerPanel
         open={drawOpen}
+        selected={selectedIFrame}
         onClose={() => setDrawOpen(false)}
         onSelected={(item) =>{
           navigate("/");
-          setIFrameLoaded(false);
           setSelectedIFrame(item);
           setDrawOpen(false);
         }}
-        menuItems={menuItems}
       />
-      {flags.menu.variant === "temporary" && <IconButton color="primary" onClick={() => setDrawOpen(true)}>
-        <MenuIcon />
-      </IconButton>}
-      <Page>
-        <div>
-          {props.children ?
-              props.children : 
-              (
-                <Iframe
-                  src={selectedIFrame.url}
-                  onLoad={() => setIFrameLoaded(true)}/>
-              )
-          }
-        </div>
-      </Page>
-    </div>
+      <PageWrapper>
+        {props.children ? props.children : <Iframe src={selectedIFrame.url} />}
+      </PageWrapper>
+    </Root>
   );
 }
 
