@@ -10,7 +10,7 @@ export interface IMenuItem {
   description?: string;
   url: string;
   icon: string;
-  // route: string;
+  route?: string;
 }
 
 export const defaultFlags:IFlags = {
@@ -51,6 +51,12 @@ export const defaultFlags:IFlags = {
         title: "Radio Eastern Homepage",
         url: "https://radioeasternfm.com.au",
         icon: "radio"
+        // route: "radio-eastern-home"
+      },
+      {
+        title: "SMS Messages",
+        url: "https://broadcastlaunch.com.au",
+        icon: "sms"
         // route: "radio-eastern-home"
       }
     ]

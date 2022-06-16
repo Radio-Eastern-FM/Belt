@@ -4,7 +4,7 @@ import { Header } from './components/header'
 import { Page } from './components/page'
 import { DrawerPanel } from './components/drawer-panel'
 import { CssBaseline } from '@mui/material';
-import useFlags from './settings/flags-provider';
+import { useFlags } from './settings/flags-provider';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';;
 
@@ -28,11 +28,11 @@ const PageWrapper = styled(Page)`
 `;
 
 const App = (props: { children: React.ReactElement }) => {
-  let flags = useFlags();
+  let { getFlags } = useFlags();
   let navigate = useNavigate();
   
   const [drawOpen, setDrawOpen] = React.useState(false);
-  const [selectedIFrame, setSelectedIFrame] = React.useState(flags.menu.items[0]);
+  const [selectedIFrame, setSelectedIFrame] = React.useState(getFlags().menu.items[0]);
   return (
     <Root className="App">
       <CssBaseline />

@@ -1,50 +1,78 @@
-import { IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Switch } from "@mui/material";
+import { Button, IconButton, List, ListItem, ListItemText, ListSubheader, TextField, Typography } from "@mui/material";
 import { useNavigate} from "react-router-dom";
 import { ArrowBack } from '@mui/icons-material';
-import React from "react";
+import { useFlags } from "../settings/flags-provider";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+
+const SettingsList = styled(List)`
+  min-width: 50vw;
+  margin: auto!important;
+`;
 
 const Settings = (props: { children: React.ReactElement }) => {
   let navigate = useNavigate();
+  let { getFlags, setFlags } = useFlags();
+  const [menuItems, setMenuItems] = useState(getFlags().menu.items);
+  const [pendingChanges, setPendingChanges] = useState(false);
+  
+  useEffect(() => {
+    setPendingChanges(JSON.stringify(menuItems) === JSON.stringify(getFlags().menu.items));
+  }, [getFlags, menuItems]);
   return (
     <div>
-      <IconButton
-        onClick={() => navigate(-1)}
-        color="primary"
-        aria-label="Back to previous page"
+      <br />
+      <Typography
+        variant="h1"
+        component="div"
+        align="center"
       >
-        <ArrowBack />
-      </IconButton>
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        subheader={<ListSubheader>Settings</ListSubheader>}
-      >
+        Settings
+      </Typography>
+      <SettingsList sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+        <IconButton
+          onClick={() => navigate(-1)}
+          color="primary"
+          aria-label="Back to previous page"
+        >
+          <ArrowBack />
+        </IconButton>
+        <ListSubheader>URL's</ListSubheader>
+        {menuItems.map((item, key) =>
+          <ListItem key={key}>
+            <TextField
+              fullWidth
+              label={menuItems[key].title}
+              variant="standard"
+              value={menuItems[key].url}
+              onChange={(e) => {
+                let newMenuItems = [...menuItems];
+                newMenuItems[key].url = e.target.value;
+                setMenuItems(newMenuItems);
+              }}
+            />
+          </ListItem>
+        )}
         <ListItem>
-          <ListItemIcon>
-            <i>i</i>
-          </ListItemIcon>
-          <ListItemText id="switch-list-label-wifi" primary="Wi-Fi" />
-          <Switch
-            edge="end"
-            checked={false}
-            inputProps={{
-              "aria-labelledby": "switch-list-label-wifi",
+          <ListItemText primary="Save setttings to this computer" />
+          <Button
+            variant="contained"
+            onClick={() => {
+              let flags = getFlags();
+              flags.menu.items = menuItems;
+              setFlags(flags);
             }}
-          />
+            disabled={pendingChanges}
+          >Save</Button>
         </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <i>i</i>
-          </ListItemIcon>
-          <ListItemText id="switch-list-label-bluetooth" primary="Bluetooth" />
-          <Switch
-            edge="end"
-            checked={true}
-            inputProps={{
-              "aria-labelledby": "switch-list-label-bluetooth",
-            }}
-          />
-        </ListItem>
-      </List>
+        {/* <Switch
+          edge="end"
+          checked={true}
+          inputProps={{
+            "aria-labelledby": "switch-list-label-bluetooth",
+          }}
+        /> */}
+      </SettingsList>
     </div>
   );
 };
