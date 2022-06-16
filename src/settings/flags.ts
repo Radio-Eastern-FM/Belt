@@ -1,4 +1,5 @@
 export interface IFlags {
+  theme: "light" | "dark",
   menu: {
     variant: "permanent" | "persistent" | "temporary" | undefined;
     items: IMenuItem[];
@@ -14,6 +15,7 @@ export interface IMenuItem {
 }
 
 export const defaultFlags:IFlags = {
+  theme: "dark",
   menu: {
     variant: "temporary",
     items: [

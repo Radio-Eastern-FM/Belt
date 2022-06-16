@@ -1,4 +1,4 @@
-import { Button, IconButton, List, ListItem, ListItemText, ListSubheader, TextField, Typography } from "@mui/material";
+import { Button, Divider, IconButton, List, ListItem, ListItemText, ListSubheader, Switch, TextField, Typography } from "@mui/material";
 import { useNavigate} from "react-router-dom";
 import { ArrowBack } from '@mui/icons-material';
 import { useFlags } from "../settings/flags-provider";
@@ -6,19 +6,25 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const SettingsList = styled(List)`
-  min-width: 50vw;
+  min-width: 40vw;
   margin: auto!important;
 `;
 
 const Settings = (props: { children: React.ReactElement }) => {
   let navigate = useNavigate();
   let { getFlags, setFlags } = useFlags();
+  
   const [menuItems, setMenuItems] = useState(getFlags().menu.items);
-  const [pendingChanges, setPendingChanges] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(getFlags().theme === "dark");
+  
+  const [isPendingChanges, setIsPendingChanges] = useState(false);
   
   useEffect(() => {
-    setPendingChanges(JSON.stringify(menuItems) === JSON.stringify(getFlags().menu.items));
-  }, [getFlags, menuItems]);
+    setIsPendingChanges(
+      JSON.stringify(menuItems) !== JSON.stringify(getFlags().menu.items) ||
+      isDarkMode !== (getFlags().theme === "dark")
+    );
+  }, [getFlags, isDarkMode, menuItems]);
   return (
     <div>
       <br />
@@ -53,6 +59,20 @@ const Settings = (props: { children: React.ReactElement }) => {
             />
           </ListItem>
         )}
+        <Divider />
+        <ListSubheader>Theming</ListSubheader>
+        <ListItem>
+          <ListItemText primary="Use dark mode" />
+          <Switch
+            edge="end"
+            checked={isDarkMode}
+            onChange={() => setIsDarkMode(!isDarkMode)}
+            inputProps={{
+              "aria-labelledby": "switch-list-label-dark-mode",
+            }}
+          />
+        </ListItem>
+        <Divider />
         <ListItem>
           <ListItemText primary="Save setttings to this computer" />
           <Button
@@ -60,18 +80,24 @@ const Settings = (props: { children: React.ReactElement }) => {
             onClick={() => {
               let flags = getFlags();
               flags.menu.items = menuItems;
+              flags.theme = isDarkMode ? "dark" : "light";
               setFlags(flags);
+              window.location.reload();
             }}
-            disabled={pendingChanges}
+            // disabled={!isPendingChanges}
           >Save</Button>
         </ListItem>
-        {/* <Switch
-          edge="end"
-          checked={true}
-          inputProps={{
-            "aria-labelledby": "switch-list-label-bluetooth",
-          }}
-        /> */}
+        <ListItem>
+          <ListItemText primary="Reset to default settings" />
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              localStorage.removeItem("flags");
+              setMenuItems(getFlags().menu.items);
+            }}
+          >Reset</Button>
+        </ListItem>
       </SettingsList>
     </div>
   );
