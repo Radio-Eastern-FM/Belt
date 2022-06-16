@@ -44,12 +44,6 @@ export const defaultFlags:IFlags = {
         // route: "studio-dashboard"
       },
       {
-        title: "Help",
-        url: "http://localhost:8080",
-        icon: "help"
-        // route: "help"
-      },
-      {
         title: "Radio Eastern Homepage",
         url: "https://radioeasternfm.com.au",
         icon: "radio"

@@ -61,7 +61,9 @@ const App = (props: { children: React.ReactElement }) => {
           }}
         />
         <PageWrapper>
-          {props.children ? props.children : <Iframe src={selectedIFrame.url} />}
+          <div>
+            {props.children ? props.children : <Iframe src={selectedIFrame.url} />}
+          </div>
         </PageWrapper>
       </Root>
     </ThemeProvider>

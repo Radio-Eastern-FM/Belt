@@ -84,8 +84,10 @@ const Settings = (props: { children: React.ReactElement }) => {
               setFlags(flags);
               window.location.reload();
             }}
-            // disabled={!isPendingChanges}
-          >Save</Button>
+            disabled={!isPendingChanges}
+          >
+            Save
+          </Button>
         </ListItem>
         <ListItem>
           <ListItemText primary="Reset to default settings" />
@@ -95,8 +97,11 @@ const Settings = (props: { children: React.ReactElement }) => {
             onClick={() => {
               localStorage.removeItem("flags");
               setMenuItems(getFlags().menu.items);
+              window.location.reload();
             }}
-          >Reset</Button>
+          >
+            Reset
+          </Button>
         </ListItem>
       </SettingsList>
     </div>

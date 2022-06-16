@@ -8,6 +8,7 @@ import {
 import './index.css';
 import App from './app';
 import Settings from './routes/settings';
+import Welcome from './routes/welcome';
 
 
 const root = ReactDOM.createRoot(
@@ -19,8 +20,11 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={
+        <App />
+      } />
+      <Route path="/welcome" element={
         <App>
-          <Settings />
+          <Welcome />
         </App>
       } />
       <Route path="/settings" element={

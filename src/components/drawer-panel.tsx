@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useFlags } from '../settings/flags-provider';
 import { IMenuItem } from '../settings/flags';
 import { useNavigate} from "react-router-dom";
-import { Settings } from '@mui/icons-material';
+import { DoorFront, Help, Settings } from '@mui/icons-material';
 
 const Panel = styled(Drawer)`
   & .MuiDrawer-paper{
@@ -43,6 +43,21 @@ export const DrawerPanel = (props: {
           <ListItemButton onClick={() => setOpen(!open)}>
             {open ? <Icon>chevron_left</Icon> : <Icon>menu</Icon>}
           </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              props.onClose();
+              navigate('/welcome');
+            }}
+          >
+            <Typography>
+              <ListItemIcon className="ListItemIcon">
+                <DoorFront />
+              </ListItemIcon>
+            </Typography>
+            {getFlags().menu.variant === 'temporary' && open &&
+              <ListItemText primary="Welcome" />
+            }
+          </ListItemButton>
           <Divider />
           {getFlags().menu.items.map((item, index) => (
             <ListItem key={item.title} disablePadding>
@@ -74,6 +89,21 @@ export const DrawerPanel = (props: {
             </Typography>
             {getFlags().menu.variant === 'temporary' && open &&
               <ListItemText primary="Open Settings" />
+            }
+          </ListItemButton>
+          <ListItemButton
+            onClick={() => {
+              props.onClose();
+              navigate('/help');
+            }}
+          >
+            <Typography>
+              <ListItemIcon className="ListItemIcon">
+                <Help />
+              </ListItemIcon>
+            </Typography>
+            {getFlags().menu.variant === 'temporary' && open &&
+              <ListItemText primary="Help" />
             }
           </ListItemButton>
         </List>
