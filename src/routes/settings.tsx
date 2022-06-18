@@ -82,7 +82,7 @@ const Settings = (props: { children: React.ReactElement }) => {
               flags.menu.items = menuItems;
               flags.theme = isDarkMode ? "dark" : "light";
               setFlags(flags);
-              window.location.reload();
+              navigate(0);
             }}
             disabled={!isPendingChanges}
           >
@@ -97,7 +97,7 @@ const Settings = (props: { children: React.ReactElement }) => {
             onClick={() => {
               localStorage.removeItem("flags");
               setMenuItems(getFlags().menu.items);
-              window.location.reload();
+              navigate(0);
             }}
           >
             Reset
